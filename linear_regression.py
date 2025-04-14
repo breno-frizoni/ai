@@ -1,4 +1,4 @@
-import math
+import math, numpy
 
 # The model has two parameters w and b.
 # There is just one input value x (feature) and one predicted y_hat as output (target).
@@ -38,7 +38,8 @@ class LinearRegression:
             self.b -= alpha * dj_b
             if i < 100000:
                 cost_history.append(self.computed_cost)
-                param_history.append([self.w, self.b])
+                param_history.append((self.w, self.b))
                 if i % math.ceil(num_iters/10) == 0:
                     print(f'Iteração: {i}:  |  J(w,b): {cost_history[-1]:0.2e}  |  w: {self.w}  |  b: {self.b}')
+        print('#'*12,f'\nNew w param: {self.w}\nNew b param: {self.b}')
         return cost_history, param_history
