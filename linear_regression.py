@@ -1,7 +1,8 @@
-import math, numpy
-
+import math
+import warnings
 # The model has two parameters w and b.
 # There is just one input value x (feature) and one predicted y_hat as output (target).
+
 class LinearRegression:
     def __init__(self, x_train, y_train, w_init=0, b_init=0):
         # Setup fields
@@ -9,7 +10,7 @@ class LinearRegression:
         self.y_train = y_train
         self.w = w_init
         self.b = b_init
-    def model(self, x: float):
+    def model(self, x):
         return self.w * x + self.b
     @property
     def computed_cost(self):
@@ -29,17 +30,19 @@ class LinearRegression:
         dj_w /= m
         dj_b /= m
         return dj_w, dj_b
-    def gradientDescentTrain(self, alpha: float, num_iters: int):
-        cost_history = []
-        param_history = []
-        for i in range(num_iters):
-            dj_w, dj_b = self.computed_gradient
-            self.w -= alpha * dj_w
-            self.b -= alpha * dj_b
-            if i < 100000:
-                cost_history.append(self.computed_cost)
-                param_history.append((self.w, self.b))
-                if i % math.ceil(num_iters/10) == 0:
-                    print(f'Iteração: {i}:  |  J(w,b): {cost_history[-1]:0.2e}  |  w: {self.w}  |  b: {self.b}')
-        print('#'*12,f'\nNew w param: {self.w}\nNew b param: {self.b}')
-        return cost_history, param_history
+    
+    def gradientDescentDataTrain(self, alpha: float, iteration_limit: int):
+        warnings.filterwarnings('error', category=RuntimeWarning)
+        print(f'Initial w is {self.w} - Initial b is {self.b}')
+        dj_w, dj_b = self.computed_gradient
+        for i in range(iteration_limit):
+            print(f'w: {self.w} b: {self.b} dj_w: {dj_w} dj_b: {dj_b}')
+            try: 
+                self.w -= alpha*dj_w
+                self.b -= alpha*dj_b
+                dj_w, dj_b = self.computed_gradient   
+            except RuntimeWarning:
+                print(f'Training interrupted at {i}º iteration to avoid infinit type operation and, therefore, NaN results.')
+                break
+        print(f'New w is {self.w} - New b is {self.b}')
+    
