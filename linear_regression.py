@@ -22,7 +22,8 @@ class LinearRegression:
         return total_cost
     @property
     def computed_gradient(self):
-        dj_w = dj_b = 0
+        dj_w = 0 
+        dj_b = 0
         m = self.x_train.shape[0]
         for i in range(m):
             dj_w += (self.model(self.x_train[i]) - self.y_train[i]) * self.x_train[i]
@@ -46,3 +47,4 @@ class LinearRegression:
                 break
         print(f'New w is {self.w} - New b is {self.b}')
     
+
